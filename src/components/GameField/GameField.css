@@ -1,0 +1,12 @@
+.game-field__wrapper {
+    padding: 20px 15px;
+    min-height: calc(100vh - 6.125rem);
+}
+.game-field {
+    border-radius: 5px;
+    width: 500px;
+    padding-top: 100%;
+    background-color: #999999;
+    height: 0;
+    position: relative;
+}
