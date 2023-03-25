@@ -8,4 +8,6 @@
     border-radius: 5px;
     background-color: #847577;
     font-size: 3rem;
+    cursor: default;
+    user-select: none;
 }

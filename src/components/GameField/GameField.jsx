@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Tile from '../Tile/Tile'
 import './GameField.css'
 
-export default function GameField({cols, rows}) {
+export default function GameField({ cols, rows }) {
 
   const [numOfCols, setNumOfCols] = useState(4)
   const [numOfRows, setNumOfRows] = useState(4)
@@ -13,9 +13,9 @@ export default function GameField({cols, rows}) {
     for (let y = 0; y < numOfRows; y++) {
       for (let x = 0; x < numOfCols; x++) {
         arr.push({
-          num : (y*numOfCols + x+1),
-          x: x+1,
-          y: y+1,
+          num: (y * numOfCols + x + 1),
+          x: x + 1,
+          y: y + 1,
         })
       }
     }
@@ -24,16 +24,16 @@ export default function GameField({cols, rows}) {
 
   return (
     <div className='game-field__wrapper'>
-        <div className='game-field' onClick={() => {console.log(tilesArray);}}>
-          {
-            tilesArray.map((element, index) => {
-              if(!(tilesArray.length === index+1)) {
-                return <Tile element={element}/>
-              }
-              
-            })
-          }
-        </div>
+      <div className='game-field' onClick={() => { console.log(tilesArray); }}>
+        {
+          tilesArray.map((element, index) => {
+            if (!(tilesArray.length === index + 1)) {
+              return <Tile element={element} />
+            } 
+            return
+          })
+        }
+      </div>
     </div>
   )
 }
