@@ -10,4 +10,5 @@
     font-size: 3rem;
     cursor: default;
     user-select: none;
+    transition: 0.2s;
 }
