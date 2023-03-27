@@ -20,6 +20,7 @@ export default function GameField({ cols, rows }) {
         })
       }
     }
+    shuffleTiles(arr)
     setTilesArray([...arr])
   }, [])
 
@@ -62,12 +63,24 @@ export default function GameField({ cols, rows }) {
 
   }
 
+  function shuffleTiles(tiles){
+    const shuffledTiles = [...tiles]
+    shuffledTiles.sort((a,b) => 0.5 - Math.random())
+    shuffledTiles.map((element, index) => {
+      element.x = (index) % numOfCols + 1
+      element.y = Math.floor((index) / numOfRows) + 1
+      // console.log(element);
+    })
+    // console.log(shuffledTiles);
+    return shuffledTiles
+  }
+
   return (
     <div className='game-field__wrapper'>
       <div className='game-field'>
         {
           tilesArray.map((element, index) => {
-            if (!(tilesArray.length === index + 1)) {
+            if (!element.empty) {
               return <Tile key={index} element={element} onClick={() => moveTile(element)}/>
             } 
             return
