@@ -34,33 +34,26 @@ export default function GameField({ cols, rows }) {
       tile.x = tempTileX
       // console.log('move left');
       setTilesArray([...tilesArray])
-      return
-    }
-    if((tile.x - emptyTile.x === -1) && (tile.y - emptyTile.y === 0)) {
+    } else if((tile.x - emptyTile.x === -1) && (tile.y - emptyTile.y === 0)) {
       const tempTileX = emptyTile.x
       emptyTile.x = tile.x
       tile.x = tempTileX
       // console.log('move right');
       setTilesArray([...tilesArray])
-      return
-    }
-    if((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === 1)) {
+    } else if((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === 1)) {
       const tempTileY = emptyTile.y
       emptyTile.y = tile.y
       tile.y = tempTileY
       // console.log('move up');
       setTilesArray([...tilesArray])
       return
-    }
-    if((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === -1)) {
+    } else if((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === -1)) {
       const tempTileY = emptyTile.y
       emptyTile.y = tile.y
       tile.y = tempTileY
       // console.log('move down');
       setTilesArray([...tilesArray])
-      return
     }
-
   }
 
   function shuffleTiles(tiles){
@@ -72,7 +65,26 @@ export default function GameField({ cols, rows }) {
       // console.log(element);
     })
     // console.log(shuffledTiles);
+    checkSolvability(shuffledTiles)
     return shuffledTiles
+  }
+
+  function checkSolvability(tiles) {
+    const emptyTile = tiles.find((tile) => tile.empty)
+    const sum = tiles.reduce((sumOfTilesCuplesNumbers, currentTile, index) => {
+      if(currentTile.empty) return sumOfTilesCuplesNumbers
+      const tilesAfterCurrent = tiles.slice(index+1, tiles.length)
+      return sumOfTilesCuplesNumbers + tilesAfterCurrent.reduce((numberOfCouples, nextTile, index) => {
+        if (currentTile.num > nextTile.num) {
+          return numberOfCouples+1
+        } else return numberOfCouples
+      }, 0)
+    }, emptyTile.y)
+    if (sum % 2 === 0) {
+      return tiles
+    } else {
+      shuffleTiles(tiles)
+    }
   }
 
   return (
