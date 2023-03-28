@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import Congrats from '../Congrats/Congrats'
 import Tile from '../Tile/Tile'
 import './GameField.css'
 
@@ -7,6 +8,7 @@ export default function GameField({ cols, rows }) {
   const [numOfCols, setNumOfCols] = useState(4)
   const [numOfRows, setNumOfRows] = useState(4)
   const [tilesArray, setTilesArray] = useState([])
+  const [puzzleSolved, setPuzzleSolved] = useState(false)
 
   useEffect(() => {
     const arr = []
@@ -16,75 +18,71 @@ export default function GameField({ cols, rows }) {
           num: (y * numOfCols + x + 1),
           x: x + 1,
           y: y + 1,
-          empty: (y===numOfRows-1 && x===numOfCols-1)
+          empty: (y === numOfRows - 1 && x === numOfCols - 1)
         })
       }
     }
     shuffleTiles(arr)
     setTilesArray([...arr])
+    setPuzzleSolved(false)
   }, [])
 
-  function moveTile(tile){
-    const emptyTile = tilesArray.find((element) => element.empty)
-    // console.log(tile);
-    // console.log(emptyTile);
-    if((tile.x - emptyTile.x === 1) && (tile.y - emptyTile.y === 0)) {
-      const tempTileX = emptyTile.x
-      emptyTile.x = tile.x
-      tile.x = tempTileX
-      // console.log('move left');
-      setTilesArray([...tilesArray])
-    } else if((tile.x - emptyTile.x === -1) && (tile.y - emptyTile.y === 0)) {
-      const tempTileX = emptyTile.x
-      emptyTile.x = tile.x
-      tile.x = tempTileX
-      // console.log('move right');
-      setTilesArray([...tilesArray])
-    } else if((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === 1)) {
-      const tempTileY = emptyTile.y
-      emptyTile.y = tile.y
-      tile.y = tempTileY
-      // console.log('move up');
-      setTilesArray([...tilesArray])
-      return
-    } else if((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === -1)) {
-      const tempTileY = emptyTile.y
-      emptyTile.y = tile.y
-      tile.y = tempTileY
-      // console.log('move down');
-      setTilesArray([...tilesArray])
-    }
-  }
-
-  function shuffleTiles(tiles){
+  function shuffleTiles(tiles) {
+    setPuzzleSolved(false)
     const shuffledTiles = [...tiles]
-    shuffledTiles.sort((a,b) => 0.5 - Math.random())
+    shuffledTiles.sort((a, b) => 0.5 - Math.random())
     shuffledTiles.map((element, index) => {
       element.x = (index) % numOfCols + 1
       element.y = Math.floor((index) / numOfRows) + 1
-      // console.log(element);
     })
-    // console.log(shuffledTiles);
-    checkSolvability(shuffledTiles)
-    return shuffledTiles
+    if (isSolved(shuffledTiles)) {
+      shuffleTiles(tiles)
+    }
+    if (isSolvable(shuffledTiles)) {
+      return shuffledTiles
+    } else {
+      shuffleTiles(tiles)
+    }
   }
 
-  function checkSolvability(tiles) {
+  function moveTile(tile) {
+    const emptyTile = tilesArray.find((element) => element.empty)
+    if (((tile.x - emptyTile.x === 1) && (tile.y - emptyTile.y === 0)) ||
+      ((tile.x - emptyTile.x === -1) && (tile.y - emptyTile.y === 0)) ||
+      ((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === 1)) ||
+      ((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === -1))) {
+      const tempTile = { ...emptyTile }
+      emptyTile.x = tile.x
+      emptyTile.y = tile.y
+      tile.x = tempTile.x
+      tile.y = tempTile.y
+      setTilesArray([...tilesArray])
+    }
+    if(isSolved(tilesArray)){
+      setPuzzleSolved(true)
+    }
+  }
+
+  function isSolved(tiles) {
+    return tiles.every((tile) => {
+      return tile.num === tile.x + (tile.y - 1) * numOfRows
+    })
+  }
+
+  function isSolvable(tiles) {
     const emptyTile = tiles.find((tile) => tile.empty)
     const sum = tiles.reduce((sumOfTilesCuplesNumbers, currentTile, index) => {
-      if(currentTile.empty) return sumOfTilesCuplesNumbers
-      const tilesAfterCurrent = tiles.slice(index+1, tiles.length)
+      if (currentTile.empty) return sumOfTilesCuplesNumbers
+      const tilesAfterCurrent = tiles.slice(index + 1, tiles.length)
       return sumOfTilesCuplesNumbers + tilesAfterCurrent.reduce((numberOfCouples, nextTile, index) => {
         if (currentTile.num > nextTile.num) {
-          return numberOfCouples+1
+          return numberOfCouples + 1
         } else return numberOfCouples
       }, 0)
     }, emptyTile.y)
     if (sum % 2 === 0) {
-      return tiles
-    } else {
-      shuffleTiles(tiles)
-    }
+      return true
+    } else return false
   }
 
   return (
@@ -93,11 +91,13 @@ export default function GameField({ cols, rows }) {
         {
           tilesArray.map((element, index) => {
             if (!element.empty) {
-              return <Tile key={index} element={element} onClick={() => moveTile(element)}/>
-            } 
-            return
+              return <Tile key={index} element={element} onClick={() => moveTile(element)} />
+            }
+            // return
           })
         }
+        {/* <div className={puzzleSolved ? "congrats congrats-active" : "congrats"}></div> */}
+        {puzzleSolved ? <Congrats onClick={() => {shuffleTiles(tilesArray)}}/> : false}
       </div>
     </div>
   )
