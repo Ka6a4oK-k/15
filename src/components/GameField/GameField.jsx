@@ -1,66 +1,63 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { initTiles, shuffleTiles, moveTile } from '../../store/tilesSlice'
 import Congrats from '../Congrats/Congrats'
 import Tile from '../Tile/Tile'
 import './GameField.css'
 
 export default function GameField({ cols, rows }) {
 
-  const [numOfCols, setNumOfCols] = useState(4)
-  const [numOfRows, setNumOfRows] = useState(4)
-  const [tilesArray, setTilesArray] = useState([])
   const [puzzleSolved, setPuzzleSolved] = useState(false)
+  const {tiles, numOfRows, numOfColumns} = useSelector(state => state.tiles)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const arr = []
-    for (let y = 0; y < numOfRows; y++) {
-      for (let x = 0; x < numOfCols; x++) {
-        arr.push({
-          num: (y * numOfCols + x + 1),
-          x: x + 1,
-          y: y + 1,
-          empty: (y === numOfRows - 1 && x === numOfCols - 1)
-        })
-      }
+    dispatch(initTiles())
+    dispatch(shuffleTiles())
+    if (isSolved(tiles)) {
+      dispatch(shuffleTiles())
     }
-    shuffleTiles(arr)
-    setTilesArray([...arr])
     setPuzzleSolved(false)
+    // const arr = []
+    // for (let y = 0; y < numOfRows; y++) {
+    //   for (let x = 0; x < numOfCols; x++) {
+    //     arr.push({
+    //       num: (y * numOfCols + x + 1),
+    //       x: x + 1,
+    //       y: y + 1,
+    //       empty: (y === numOfRows - 1 && x === numOfCols - 1)
+    //     })
+    //   }
+    // }
+    // shuffleTiles(arr)
+    // setTilesArray([...arr])
+    // setPuzzleSolved(false)
   }, [])
 
-  function shuffleTiles(tiles) {
-    setPuzzleSolved(false)
-    const shuffledTiles = [...tiles]
-    shuffledTiles.sort((a, b) => 0.5 - Math.random())
-    shuffledTiles.map((element, index) => {
-      element.x = (index) % numOfCols + 1
-      element.y = Math.floor((index) / numOfRows) + 1
-    })
-    if (isSolved(shuffledTiles)) {
-      shuffleTiles(tiles)
-    }
-    if (isSolvable(shuffledTiles)) {
-      return shuffledTiles
-    } else {
-      shuffleTiles(tiles)
-    }
-  }
+  // function shuffleTiles(tiles) {
+  //   setPuzzleSolved(false)
+  //   const shuffledTiles = [...tiles]
+  //   shuffledTiles.sort((a, b) => 0.5 - Math.random())
+  //   shuffledTiles.map((element, index) => {
+  //     element.x = (index) % numOfCols + 1
+  //     element.y = Math.floor((index) / numOfRows) + 1
+  //   })
+  //   if (isSolved(shuffledTiles)) {
+  //     shuffleTiles(tiles)
+  //   }
+  //   if (isSolvable(shuffledTiles)) {
+  //     return shuffledTiles
+  //   } else {
+  //     shuffleTiles(tiles)
+  //   }
+  // }
 
-  function moveTile(tile) {
-    const emptyTile = tilesArray.find((element) => element.empty)
-    if (((tile.x - emptyTile.x === 1) && (tile.y - emptyTile.y === 0)) ||
-      ((tile.x - emptyTile.x === -1) && (tile.y - emptyTile.y === 0)) ||
-      ((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === 1)) ||
-      ((tile.x - emptyTile.x === 0) && (tile.y - emptyTile.y === -1))) {
-      const tempTile = { ...emptyTile }
-      emptyTile.x = tile.x
-      emptyTile.y = tile.y
-      tile.x = tempTile.x
-      tile.y = tempTile.y
-      setTilesArray([...tilesArray])
-    }
-    if(isSolved(tilesArray)){
-      setPuzzleSolved(true)
-    }
+  function onTileClick(tile) {
+    (function () {
+      const emptyTile = tiles.find((tile) => tile.empty)
+      dispatch(moveTile({ tile, emptyTile }))
+    }())
+    setPuzzleSolved(isSolved(tiles))
   }
 
   function isSolved(tiles) {
@@ -71,6 +68,9 @@ export default function GameField({ cols, rows }) {
 
   function isSolvable(tiles) {
     const emptyTile = tiles.find((tile) => tile.empty)
+    if(!emptyTile) {
+      return
+    }
     const sum = tiles.reduce((sumOfTilesCuplesNumbers, currentTile, index) => {
       if (currentTile.empty) return sumOfTilesCuplesNumbers
       const tilesAfterCurrent = tiles.slice(index + 1, tiles.length)
@@ -89,15 +89,13 @@ export default function GameField({ cols, rows }) {
     <div className='game-field__wrapper'>
       <div className='game-field'>
         {
-          tilesArray.map((element, index) => {
+          tiles.map((element, index) => {
             if (!element.empty) {
-              return <Tile key={index} element={element} onClick={() => moveTile(element)} />
+              return <Tile key={index} element={element} onClick={() => onTileClick(element)} />
             }
-            // return
           })
         }
-        {/* <div className={puzzleSolved ? "congrats congrats-active" : "congrats"}></div> */}
-        {puzzleSolved ? <Congrats onClick={() => {shuffleTiles(tilesArray)}}/> : false}
+        {puzzleSolved ? <Congrats onClick={() => {dispatch(shuffleTiles())}}/> : false}
       </div>
     </div>
   )

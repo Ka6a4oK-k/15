@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import './App.css';
 import GameField from './components/GameField/GameField';
 import OptionsBar from './components/OptionsBar/OptionsBar';
