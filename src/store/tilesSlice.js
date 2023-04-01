@@ -23,12 +23,39 @@ const tilesSlice = createSlice({
             }
         },
         shuffleTiles(state) {
-            state.tiles.sort((a, b) => 0.5 - Math.random())
-            state.tiles.map((tile, index) => {
-                tile.x = (index) % state.numOfColumns + 1
-                tile.y = Math.floor((index) / state.numOfRows) + 1
-            })
-            console.log(state.tiles.findIndex((tile) => tile.empty));
+            function shuffle(tilesArr) {
+                tilesArr.sort((a, b) => 0.5 - Math.random())
+                tilesArr.map((tile, index) => {
+                    tile.x = (index) % state.numOfColumns + 1
+                    tile.y = Math.floor((index) / state.numOfRows) + 1
+                })
+                if (!isSolvable(tilesArr)) {
+                    shuffle(tilesArr)
+                }
+            }
+            function isSolvable(tilesArr) {
+                const emptyTile = tilesArr.find((tile) => tile.empty)
+                if (!emptyTile) {
+                    return
+                }
+                const sum = tilesArr.reduce((sumOfTilesCuplesNumbers, currentTile, index) => {
+                    if (currentTile.empty) return sumOfTilesCuplesNumbers
+                    const tilesAfterCurrent = tilesArr.slice(index + 1, tilesArr.length)
+                    return sumOfTilesCuplesNumbers + tilesAfterCurrent.reduce((numberOfCouples, nextTile, index) => {
+                        if (currentTile.num > nextTile.num) {
+                            return numberOfCouples + 1
+                        } else return numberOfCouples
+                    }, 0)
+                }, emptyTile.y)
+                if (sum % 2 === 0) {
+                    return true
+                } else return false
+            }
+            state.solved = false
+            shuffle(state.tiles)
+            if(!isSolvable(state.tiles)){
+                shuffle(state.tiles)
+            }
         },
         moveTile(state, action) {
             const tile = action.payload.tile
@@ -44,6 +71,20 @@ const tilesSlice = createSlice({
                     state.tiles[emptyTileIndex].x = tile.x
                     state.tiles[emptyTileIndex].y = tile.y
             }
+            function isSolved(tiles) {
+                return tiles.every((tile) => {
+                    return tile.num === tile.x + (tile.y - 1) * state.numOfRows
+                })
+            }
+            if (isSolved(state.tiles)) {
+                state.solved = true
+            }
+        },
+        setNumOfRows(state, action) {
+            state.numOfRows = action.payload
+        },
+        setNumOfColumns(state, action) {
+            state.numOfColumns = action.payload
         },
     }
 })

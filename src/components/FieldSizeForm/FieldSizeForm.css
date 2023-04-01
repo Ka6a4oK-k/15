@@ -1,0 +1,15 @@
+.field-size-form {
+    position: absolute;
+    top: 4.125rem;
+    /* overflow-y: visible; */
+    left: 0;
+    width: 100%;
+    min-height: calc(100vh - 4.125rem);
+    z-index: 1;
+    background-color: rgba(0,0,0, 0.85);
+    transition: 0.3s;
+    transform: translateY(-100%);
+}
+.field-size-form-active {
+    transform: translateY(0%);
+}
