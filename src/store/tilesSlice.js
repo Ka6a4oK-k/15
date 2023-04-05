@@ -27,35 +27,45 @@ const tilesSlice = createSlice({
                 tilesArr.sort((a, b) => 0.5 - Math.random())
                 tilesArr.map((tile, index) => {
                     tile.x = (index) % state.numOfColumns + 1
-                    tile.y = Math.floor((index) / state.numOfRows) + 1
+                    tile.y = Math.floor((index) / state.numOfColumns) + 1
                 })
                 if (!isSolvable(tilesArr)) {
                     shuffle(tilesArr)
                 }
             }
             function isSolvable(tilesArr) {
+                //inversion - 
+                // const sum = tilesArr.reduce((sumOfInversions, currentTile, index) => {
+                //     if (currentTile.empty) return sumOfInversions-1
+                //     const tilesAfterCurrent = tilesArr.slice(index + 1, tilesArr.length)
+                //     return sumOfInversions + tilesAfterCurrent.reduce((inversionsOfCurrTile, nextTile, index) => {
+                //         if (currentTile.num > nextTile.num) {
+                //             return inversionsOfCurrTile + 1
+                //         }
+                //         return inversionsOfCurrTile
+                //     }, 0)
+                // }, 0)
+                // console.log(sum);
+                // if (sum % 2 === 0) {
+                //     return true
+                // } else return false
+                let sumOfInversions =  0
                 const emptyTile = tilesArr.find((tile) => tile.empty)
-                if (!emptyTile) {
-                    return
-                }
-                const sum = tilesArr.reduce((sumOfTilesCuplesNumbers, currentTile, index) => {
-                    if (currentTile.empty) return sumOfTilesCuplesNumbers
+                tilesArr.forEach((tile, index) => {
+                    if(tile.empty) return
                     const tilesAfterCurrent = tilesArr.slice(index + 1, tilesArr.length)
-                    return sumOfTilesCuplesNumbers + tilesAfterCurrent.reduce((numberOfCouples, nextTile, index) => {
-                        if (currentTile.num > nextTile.num) {
-                            return numberOfCouples + 1
-                        } else return numberOfCouples
-                    }, 0)
-                }, emptyTile.y)
-                if (sum % 2 === 0) {
-                    return true
-                } else return false
+                    tilesAfterCurrent.forEach((nextTile) => {
+                        if(nextTile.num < tile.num){
+                            sumOfInversions++
+                        }
+                    })
+                });
+                const numOfTruth = sumOfInversions + (state.numOfRows-emptyTile.y) * (state.numOfColumns - 1)
+                if (numOfTruth % 2 === 0) return true
+                return false
             }
             state.solved = false
             shuffle(state.tiles)
-            if(!isSolvable(state.tiles)){
-                shuffle(state.tiles)
-            }
         },
         moveTile(state, action) {
             const tile = action.payload.tile
@@ -73,7 +83,7 @@ const tilesSlice = createSlice({
             }
             function isSolved(tiles) {
                 return tiles.every((tile) => {
-                    return tile.num === tile.x + (tile.y - 1) * state.numOfRows
+                    return tile.num === tile.x + (tile.y - 1) * state.numOfColumns
                 })
             }
             if (isSolved(state.tiles)) {
@@ -86,9 +96,10 @@ const tilesSlice = createSlice({
         setNumOfColumns(state, action) {
             state.numOfColumns = action.payload
         },
+
     }
 })
 
-export const { initTiles, shuffleTiles, moveTile } = tilesSlice.actions
+export const { initTiles, shuffleTiles, moveTile, setNumOfRows, setNumOfColumns } = tilesSlice.actions
 
 export default tilesSlice.reducer

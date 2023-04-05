@@ -7,13 +7,13 @@ import './GameField.css'
 
 export default function GameField({ cols, rows }) {
 
-  const {tiles, solved} = useSelector(state => state.tiles)
+  const {tiles, solved, numOfRows, numOfColumns } = useSelector(state => state.tiles)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initTiles())
     dispatch(shuffleTiles())
-  }, [])
+  }, [numOfRows, numOfColumns])
 
   function onTileClick(tile) {
     (function () {
