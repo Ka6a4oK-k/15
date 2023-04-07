@@ -8,9 +8,9 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
-    padding-inline: 1rem;
+    /* padding-inline: 1rem; */
     position: relative;
-    margin-bottom: 2rem;
+    /* margin-bottom: 2rem; */
     z-index: 2;
 }
 /* .options-bar button {

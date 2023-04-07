@@ -96,7 +96,6 @@ const tilesSlice = createSlice({
         setNumOfColumns(state, action) {
             state.numOfColumns = action.payload
         },
-
     }
 })
 

@@ -3,8 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(25% - 2px);
-    height: calc(25% - 2px);
     border-radius: 5px;
     background-color: #847577;
     font-size: 3rem;
