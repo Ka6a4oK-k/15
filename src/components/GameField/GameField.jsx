@@ -32,7 +32,9 @@ export default function GameField({ cols, rows }) {
     <div className='game-field__wrapper'
       style={{
         height: `calc(${height}px - 4.125rem)`,
-        width:  ((numOfColumns / numOfRows) < (width / height)) ? `calc((${(height)}px - 4.125rem) / ${(numOfRows / numOfColumns)} - 2rem)` : `calc((${(height)}px - 4.125rem) / ${(height/width)} - 2rem)` 
+        width: ((numOfColumns / numOfRows) < (width / height)) ?
+          `calc((${(height)}px - 4.125rem) / ${(numOfRows / numOfColumns)} - 1rem)` :
+          `calc((${(height)}px - 4.125rem) / ${(height / width)} - 1rem)` 
       }}>
       <div className='game-field' style={{paddingTop: `calc(${100*numOfRows/numOfColumns}% - 0rem)`}}>
         {

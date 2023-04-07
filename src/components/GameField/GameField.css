@@ -1,5 +1,5 @@
 .game-field__wrapper {
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     display: flex;
     flex-direction: column;
     align-content: center;
@@ -8,6 +8,7 @@
 .game-field {
     border-radius: 5px;
     background-color: #999999;
+    background-color: #8ECAE6;
     height: 0;
     position: relative;
 }

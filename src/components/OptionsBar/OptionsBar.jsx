@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { shuffleTiles } from '../../store/tilesSlice'
-
-import './OptionsBar.css'
 import FieldSizeForm from '../FieldSizeForm/FieldSizeForm'
+import './OptionsBar.css'
+import ThemePicker from '../ThemePicker/ThemePicker'
 
 export default function OptionsBar() {
 
@@ -30,13 +30,12 @@ export default function OptionsBar() {
     return (
         <div className='options-bar__wrapper'>
             <div className='options-bar'>
-                <button className="shuffle-btn btn" onClick={() => {dispatch(shuffleTiles())}}>Shuffle</button>
+                <button className="shuffle-btn btn" onClick={() => { dispatch(shuffleTiles()) }}>Shuffle</button>
                 <button className="field-size-btn btn" onClick={toggleFieldSizeOptions}>Field size</button>
                 <button className="theme-btn btn" onClick={toggleThemeOtions}>Theme</button>
             </div>
-            <div className={fieldSizeOptionActive ? "field-size__picker field-size__picker-active" : "field-size__picker"}>
-                <FieldSizeForm close={closeFieldSizeOptions}/>
-            </div>
+            <FieldSizeForm close={closeFieldSizeOptions} active={fieldSizeOptionActive} />
+            <ThemePicker close={closeThemeOtions} active={themeOptionActive}/>
         </div>
     )
 }
