@@ -3,8 +3,7 @@
 }
 .options-bar {
     width: 100%;
-    background-color: #332e2e;
-    background-color: #FB8500;
+    background-color: var(--clr-optBar-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,7 +17,9 @@
     border: none;
     border-radius: 5px;
     padding: 0.5rem 1rem;
-    background-color: #219EBC;
+    /* background-color: #219EBC; */
+    background-color: var(--clr-btn);
+
     color: white;
     font-weight: 700;
     font-size: 1rem;
@@ -26,5 +27,5 @@
     cursor: pointer;
 }
 .btn:hover {
-    background-color: #023047;
+    background-color: var(--clr-btn-hover);
 }
