@@ -1,0 +1,27 @@
+.ThemePalette {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ThemePalette input {
+    display: none;
+    appearance: none;
+}
+
+.ThemePalette input:checked + label {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.ThemePalette label {
+    display: flex;
+    width: 40%;
+    min-width: 300px;
+    padding: 0.7rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    height: 60px;
+}
+.ThemePalette label div {
+    height: 100%;
+}

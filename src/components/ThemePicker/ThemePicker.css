@@ -12,48 +12,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: scroll;
+    gap: 0.5rem;
 }
 .theme-picker-active {
     transform: translateY(0%);
-}
-.theme-picker-form {
-    display: flex;
-    flex-direction: column;
-}
-
-:root:has(#theme-1:checked){
-    --clr-optBar-bg: #023047;
-    --clr-body-bg: #219EBC;
-    --clr-gameFeld-bg: #8ECAE6;
-    --clr-tile: #023047;
-    --clr-text: #fff;
-    --clr-btn: #FFB703;
-    --clr-btn-hover: #FB8500;
-}
-:root:has(#theme-2:checked){
-    --clr-optBar-bg: #4A4E69;
-    --clr-body-bg: #9A8C98;
-    --clr-gameFeld-bg: #F2E9E4;
-    --clr-tile: #9A8C98;
-    --clr-text: #fff;
-    --clr-btn: #9A8C98;
-    --clr-btn-hover: #22223B;
-}
-:root:has(#theme-3:checked){
-    --clr-optBar-bg: #3A5A40;
-    --clr-body-bg: #A3B18A;
-    --clr-gameFeld-bg: #DAD7CD;
-    --clr-tile: #344E41;
-    --clr-text: #fff;
-    --clr-btn: #DAD7CD;
-    --clr-btn-hover: #588157;
-}
-:root:has(#theme-4:checked){
-    --clr-optBar-bg: #9B5DE5;
-    --clr-body-bg: #F15BB5;
-    --clr-gameFeld-bg: #00F5D4;
-    --clr-tile: #FEE440;
-    --clr-text: #fff;
-    --clr-btn: #00F5D4;
-    --clr-btn-hover: #00BBF9;
 }
