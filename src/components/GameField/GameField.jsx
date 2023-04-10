@@ -47,7 +47,9 @@ export default function GameField({ cols, rows }) {
                 left={`calc(${100 / numOfColumns * (element.x-1)}% + 1px)`}
                 width={`calc(${100 / numOfColumns}% - 2px)`}
                 height={`calc(${100 / numOfRows}% - 2px)`}
-                fontSize={`calc(${100 / numOfRows / 3}vh)`}
+                fontSize={((numOfColumns / numOfRows) < (width / height)) ?
+                  `calc(${100 / numOfRows / 2.5}vh)` :
+                  `calc(${100 / numOfColumns / 2.5}vw)`}
                 onClick={() => onTileClick(element)}
               />
             }
